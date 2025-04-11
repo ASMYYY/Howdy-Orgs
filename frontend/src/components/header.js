@@ -1,5 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import logo from './images/logo.png';
+import headerBanner from './images/header.png';
 
 const Header = () => {
   return (
@@ -13,7 +15,7 @@ const Header = () => {
         borderBottom: '1px solid #ddd'
       }}>
         <div style={{ display: 'flex', alignItems: 'center' }}>
-          <img src="/logo.png" alt="Logo" style={{ height: '50px', marginRight: '15px' }} />
+          <img src={logo} alt="Logo" style={{ height: '50px', marginRight: '15px' }} />
           <h1 style={{ fontSize: '24px', color: '#333' }}>Howdy Orgs</h1>
         </div>
         <nav>
@@ -26,7 +28,7 @@ const Header = () => {
         </nav>
       </header>
       <div>
-        <img src="/header.png" alt="Header Banner" style={{ width: '100%', height: 'auto' }} />
+        <img src={headerBanner} alt="Header Banner" style={{ width: '100%', height: 'auto' }} />
       </div>
     </>
   );

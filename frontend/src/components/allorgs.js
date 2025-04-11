@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import orgsData from './tamu_organizations.json';
+import orgsData from './data/tamu_organizations.json';
 
 const AllOrgs = () => {
   const [orgs, setOrgs] = useState([]);
@@ -16,6 +16,13 @@ const AllOrgs = () => {
           <li key={index} style={{ marginBottom: '1rem' }}>
             <strong>{org.name || 'Unnamed Organization'}</strong><br />
             <span>{org.description || 'No description available.'}</span><br />
+            {org.image && (
+              <img 
+                src={require(`./images/${org.image}`)} 
+                alt={org.name} 
+                style={{ width: '150px', marginTop: '0.5rem' }} 
+              />
+            )}
             {org.url && (
               <a href={org.url} target="_blank" rel="noopener noreferrer">
                 Visit Website
