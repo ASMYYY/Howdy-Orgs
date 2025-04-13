@@ -20,7 +20,7 @@ function App() {
   return (
     <Router>
       <div className="App">
-        {loggedIn && <Header />}
+        {window.location.pathname !== '/' && window.location.pathname !== '/register' && <Header />}
         <Routes>
           <Route path="/" element={loggedIn ? <Home /> : <LoginRegister />} />
           <Route path="/register" element={<Register />} />

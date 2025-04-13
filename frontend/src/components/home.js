@@ -1,6 +1,5 @@
 import React from 'react';
 import headerBanner from './images/header.png';
-import Header from './header';
 
 const recommendedOrgs = [
   { name: 'Aggie Coding Club', description: 'For developers and coders at TAMU' },
@@ -11,7 +10,6 @@ const recommendedOrgs = [
 const Home = () => {
   return (
     <>
-      <Header />
       <div className="main-content">
         <main style={{ padding: '5px' }}>
           <img src={headerBanner} alt="Header Banner" style={{ width: '100%', height: '380px', margin: '5px 0' }} />
