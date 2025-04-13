@@ -1,0 +1,38 @@
+[
+    {
+      "name": "Alice Johnson",
+      "email": "alice.johnson@tamu.edu",
+      "interests": ["volunteering", "food security", "community service"],
+      "is_member_of_org": true,
+      "current_orgs": ["The 12th Can"]
+    },
+    {
+      "name": "Brian Lee",
+      "email": "brian.lee@tamu.edu",
+      "interests": ["law", "school traditions", "outreach"],
+      "is_member_of_org": false,
+      "current_orgs": []
+    },
+    {
+      "name": "Clara Evans",
+      "email": "clara.evans@tamu.edu",
+      "interests": ["consulting", "business", "social impact"],
+      "is_member_of_org": true,
+      "current_orgs": ["180 Degrees Consulting TAMU"]
+    },
+    {
+      "name": "David Kumar",
+      "email": "david.kumar@tamu.edu",
+      "interests": ["leadership", "military discipline", "mentoring"],
+      "is_member_of_org": true,
+      "current_orgs": ["1st Battalion Staff"]
+    },
+    {
+      "name": "Emma Thompson",
+      "email": "emma.thompson@tamu.edu",
+      "interests": ["networking", "team spirit", "law school life"],
+      "is_member_of_org": false,
+      "current_orgs": []
+    }
+]
+  
