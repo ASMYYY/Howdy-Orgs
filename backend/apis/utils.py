@@ -5,7 +5,7 @@ from rank_bm25 import BM25Okapi
 
 class BM25Helper:
     def __init__(self):
-        self.dataset_path = "backend/data_preprocessing/tamu_organizations.json"
+        self.dataset_path = "backend/data_preprocessing/tamu_organizations_img.json"
         self.data = None
         self.bm25 = None
         self.n = 3

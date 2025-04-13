@@ -1,10 +1,8 @@
 import os
 import json
 import requests
-from pymongo import MongoClient, errors
 from PIL import Image
 from io import BytesIO
-import certifi
 import re
 
 
@@ -27,25 +25,31 @@ from urllib.parse import quote_plus
 #     exit(1)
 
 
-username = quote_plus("gaurip29899")
-password = quote_plus("Gauri@1234")
+# username = quote_plus("gaurip29899")
+# password = quote_plus("Gauri@1234")
 
-MONGO_URI = f"mongodb+srv://{username}:{password}@cluster0.yinqo.mongodb.net/?retryWrites=true&w=majority"
+# MONGO_URI = f"mongodb+srv://{username}:{password}@cluster0.yinqo.mongodb.net/?retryWrites=true&w=majority"
 
-try:
-    client = MongoClient(MONGO_URI, tlsCAFile=certifi.where())
-    client.server_info()  # Force connection on a request
-    print("✅ Connected to MongoDB")
-except errors.ServerSelectionTimeoutError as err:
-    print("❌ Failed to connect to MongoDB Atlas:")
-    print(err)
+# try:
+#     client = MongoClient(MONGO_URI, tlsCAFile=certifi.where())
+#     client.server_info()  # Force connection on a request
+#     print("Connected to MongoDB")
+# except errors.ServerSelectionTimeoutError as err:
+#     print("Failed to connect to MongoDB Atlas:")
+#     print(err)
 
-# client = MongoClient(MONGO_URI)
+# # client = MongoClient(MONGO_URI)
 
-db = client["tamu_orgs"]
-collection = db["organizations"]
+# db = client["tamu_orgs"]
+# collection = db["organizations"]
 
 # === Create image storage folder ===
+
+import pandas as pd
+csv_data = pd.read_csv("../data/Organisations_Master.csv")
+org2key = dict(zip(csv_data["title"], csv_data["primary_key"]))
+
+
 os.makedirs("images", exist_ok=True)
 
 # === Load JSON ===
@@ -65,24 +69,23 @@ def download_and_resize_image(url, name_slug):
             img = img.convert("RGB")  # For consistent format
             img = img.resize((200, 200))  # Resize to 200x200 px
 
-            local_path = f"images/{name_slug}.jpg"
+            local_path = f"images/{org2key[name_slug]}.jpg"
             img.save(local_path, format="JPEG", quality=85)
             return local_path
     except Exception as e:
-        print(f"❌ Failed to process image for {name_slug}: {e}")
+        print(f"Failed to process image for {name_slug}: {e}")
     return None
 
 # === Preprocess, Resize, Store ===
 cleaned = []
-
-
 
 for org in data:
     org.pop("categories", None)
     org.pop("socials", None)
 
     # name_slug = org["name"].lower().replace(" ", "_") or "unnamed"
-    name_slug = sanitize_filename(org["name"]) or "unnamed"
+    # name_slug = sanitize_filename(org["name"]) or "unnamed"
+    name_slug = org["name"] or "unnamed"
     image_url = org.get("thumbnail", "")
 
     local_img = download_and_resize_image(image_url, name_slug) if image_url else None
@@ -96,8 +99,8 @@ for org in data:
     cleaned.append(org)
 
 # Optional: Clear existing DB
-collection.delete_many({})
+# collection.delete_many({})
 
-# Insert
-collection.insert_many(cleaned)
-print(f"✅ Inserted {len(cleaned)} organizations into MongoDB Atlas!")
+# # Insert
+# collection.insert_many(cleaned)
+# print(f"Inserted {len(cleaned)} organizations into MongoDB Atlas!")
