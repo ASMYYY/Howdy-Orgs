@@ -1,44 +1,54 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-import orgsData from './data/tamu_organizations.json';
+import { getSBERTOrgs } from './api/getSBERTOrgs';
 
 const AllOrgs = () => {
   const [orgs, setOrgs] = useState([]);
+  const userId = 1; 
 
   useEffect(() => {
-    setOrgs(orgsData);
-  }, []);
+    const fetchRankedOrgs = async () => {
+      try {
+        const rankedOrgs = await getSBERTOrgs(userId);
+
+        if (!Array.isArray(rankedOrgs)) {
+          console.error("Unexpected response from backend:", rankedOrgs);
+          setOrgs([]);
+          return;
+        }
+
+        setOrgs(rankedOrgs);
+      } catch (error) {
+        console.error("Error fetching SBERT orgs:", error);
+        setOrgs([]);
+      }
+    };
+
+    fetchRankedOrgs();
+  }, [userId]);
 
   return (
-    <div style={{ padding: '20px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-      <div style={{ marginBottom: '20px' }}>
-        <h2>All TAMU Organizations</h2>
-      </div>
+    <div style={{ padding: '20px', textAlign: 'center' }}>
+      <h2>Recommended Organizations</h2>
+
       <div style={{
         display: 'flex',
         flexWrap: 'wrap',
         justifyContent: 'center',
         gap: '20px',
-        maxWidth: '1000px'
+        marginTop: '20px'
       }}>
-        {orgs.map((org, index) => (
-          <Link to="/orgdetails" key={index} style={{
+        {Array.isArray(orgs) && orgs.map((org, index) => (
+          <div key={index} style={{
+            border: '1px solid #ccc',
+            borderRadius: '8px',
+            padding: '16px',
             width: '250px',
-            textDecoration: 'none',
-            color: 'inherit'
+            backgroundColor: '#fff',
+            boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
           }}>
-            <div style={{
-              border: '1px solid #ccc',
-              borderRadius: '8px',
-              padding: '16px',
-              boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
-              textAlign: 'center',
-              backgroundColor: '#fff',
-              transition: 'transform 0.2s',
-            }}>
-              <strong>{org.name || 'Unnamed Organization'}</strong>
-            </div>
-          </Link>
+            <strong>{org.title}</strong>
+            <p style={{ color: '#666' }}>Match: {org.match_percentage}%</p>
+          </div>
         ))}
       </div>
     </div>
