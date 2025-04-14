@@ -54,5 +54,6 @@ const AllOrgs = () => {
     </div>
   );
 };
-
+ 
 export default AllOrgs;
+ 

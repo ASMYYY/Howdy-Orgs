@@ -3,8 +3,10 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from .utils import SBERTRecommender
 from .utils import BM25Helper
-
-
+ 
+import pandas as pd
+ 
+ 
 app = FastAPI()
 app.add_middleware(
     CORSMiddleware,
@@ -13,16 +15,16 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-
+ 
+ 
 bmobj = BM25Helper()
 bmobj.load_data()
 bmobj.store_corpus()
-
+ 
 class Item(BaseModel):
     user: str
-    query: str 
-
+    query: str
+ 
 @app.post("/backend/bm25")
 async def create_item(item: Item):
     item_dict = item.dict()
@@ -45,3 +47,10 @@ async def get_sbert_ranked_user(request: UserRequest):
         return result.to_dict(orient="records")
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
+ 
+@app.get("/backend/orgs-list")
+def get_organizations():
+    csv_path = "backend/data/Organisations_Master.csv"
+    df = pd.read_csv(csv_path)
+    data = df.fillna('').to_dict(orient="records")
+    return data
