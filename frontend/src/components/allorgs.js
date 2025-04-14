@@ -1,14 +1,23 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import orgsData from './data/tamu_organizations.json';
-
+ 
 const AllOrgs = () => {
   const [orgs, setOrgs] = useState([]);
-
+ 
   useEffect(() => {
-    setOrgs(orgsData);
+    fetch('http://127.0.0.1:8000/backend/orgs-list')
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Failed to fetch organization data');
+        }
+        return response.json();
+      })
+      .then(data => setOrgs(data))
+      .catch(error => {
+        console.error('Error fetching data:', error);
+      });
   }, []);
-
+ 
   return (
     <div style={{ padding: '20px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
       <div style={{ marginBottom: '20px' }}>
@@ -36,7 +45,7 @@ const AllOrgs = () => {
               backgroundColor: '#fff',
               transition: 'transform 0.2s',
             }}>
-              <strong>{org.name || 'Unnamed Organization'}</strong>
+              <strong>{org.title || 'Unnamed Organization'}</strong>
             </div>
           </Link>
         ))}
@@ -44,5 +53,6 @@ const AllOrgs = () => {
     </div>
   );
 };
-
+ 
 export default AllOrgs;
+ 
