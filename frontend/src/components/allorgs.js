@@ -3,32 +3,53 @@ import { getSBERTOrgs } from './api/getSBERTOrgs';
 
 const AllOrgs = () => {
   const [orgs, setOrgs] = useState([]);
-  const userId = 1; 
+  const [displayLimit, setDisplayLimit] = useState(20);
+  const [currentPage, setCurrentPage] = useState(1);
+  const userId = 1;
 
   useEffect(() => {
     const fetchRankedOrgs = async () => {
       try {
         const rankedOrgs = await getSBERTOrgs(userId);
-
         if (!Array.isArray(rankedOrgs)) {
           console.error("Unexpected response from backend:", rankedOrgs);
           setOrgs([]);
           return;
         }
-
         setOrgs(rankedOrgs);
       } catch (error) {
         console.error("Error fetching SBERT orgs:", error);
         setOrgs([]);
       }
     };
-
     fetchRankedOrgs();
   }, [userId]);
+
+  const handleLimitChange = (e) => {
+    const value = e.target.value === "all" ? "all" : parseInt(e.target.value);
+    setDisplayLimit(value);
+    setCurrentPage(1); // reset to first page
+  };
+
+  const totalPages = displayLimit === "all" ? 1 : Math.ceil(orgs.length / displayLimit);
+  const paginatedOrgs =
+    displayLimit === "all"
+      ? orgs
+      : orgs.slice((currentPage - 1) * displayLimit, currentPage * displayLimit);
 
   return (
     <div style={{ padding: '20px', textAlign: 'center' }}>
       <h2>Recommended Organizations</h2>
+
+      <div style={{ marginBottom: '20px' }}>
+        <label htmlFor="limitSelect" style={{ marginRight: '10px' }}>Show:</label>
+        <select id="limitSelect" onChange={handleLimitChange} value={displayLimit}>
+          <option value="20">20</option>
+          <option value="50">50</option>
+          <option value="100">100</option>
+          <option value="all">All</option>
+        </select>
+      </div>
 
       <div style={{
         display: 'flex',
@@ -37,7 +58,7 @@ const AllOrgs = () => {
         gap: '20px',
         marginTop: '20px'
       }}>
-        {Array.isArray(orgs) && orgs.map((org, index) => (
+        {paginatedOrgs.map((org, index) => (
           <div key={index} style={{
             border: '1px solid #ccc',
             borderRadius: '8px',
@@ -51,9 +72,28 @@ const AllOrgs = () => {
           </div>
         ))}
       </div>
+
+      {displayLimit !== "all" && (
+        <div style={{ marginTop: '30px' }}>
+          <button
+            disabled={currentPage === 1}
+            onClick={() => setCurrentPage((prev) => prev - 1)}
+            style={{ marginRight: '10px' }}
+          >
+            ← Prev
+          </button>
+          <span>Page {currentPage} of {totalPages}</span>
+          <button
+            disabled={currentPage === totalPages}
+            onClick={() => setCurrentPage((prev) => prev + 1)}
+            style={{ marginLeft: '10px' }}
+          >
+            Next →
+          </button>
+        </div>
+      )}
     </div>
   );
 };
- 
+
 export default AllOrgs;
- 
