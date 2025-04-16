@@ -9,7 +9,7 @@ from rank_bm25 import BM25Okapi
 
 class BM25Helper:
     def __init__(self):
-        self.dataset_path = "backend/data_preprocessing/tamu_organizations_img.json"
+        self.dataset_path = "./data_preprocessing/tamu_organizations_img.json"
         self.data = None
         self.bm25 = None
         self.n = 3
@@ -38,7 +38,7 @@ class SBERTRecommender:
         self.corpus_embeddings = None
 
     def load_data(self):
-        self.org_df = pd.read_csv("/Users/alisharaj/Desktop/ISR_Project/Howdy-Orgs/backend/data/Organisations_Master.csv")  
+        self.org_df = pd.read_csv("./data/Organisations_Master.csv")  
         self.org_df.fillna("", inplace=True)
 
         corpus = [self.build_weighted_text(row) for _, row in self.org_df.iterrows()]
@@ -55,7 +55,7 @@ class SBERTRecommender:
         return f"{title} {desc} {keywords}".strip()
 
     def get_ranked_orgs(self, user_id: int):
-        user_df = pd.read_csv("/Users/alisharaj/Desktop/ISR_Project/Howdy-Orgs/backend/data/Users_Master.csv")
+        user_df = pd.read_csv("./data/Users_Master.csv")
 
         # Find user by ID
         user_row = user_df[user_df['ID'] == user_id]
@@ -77,6 +77,3 @@ class SBERTRecommender:
         return result.sort_values(by="SBERT_score", ascending=False).reset_index(drop=True)[
             ["primary_key", "title", "match_percentage", "SBERT_score", "Keyword1", "Keyword2", "Keyword3"]
         ]
-
-
-
