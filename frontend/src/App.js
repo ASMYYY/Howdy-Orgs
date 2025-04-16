@@ -11,10 +11,13 @@ import { useState, useEffect } from 'react';
 
 function App() {
   const [loggedIn, setLoggedIn] = useState(false);
+  const [userEmail, setUserEmail] = useState('');
 
   useEffect(() => {
     const storedLogin = localStorage.getItem('loggedIn') === 'true';
+    const storedEmail = localStorage.getItem('userEmail') || '';
     setLoggedIn(storedLogin);
+    setUserEmail(storedEmail);
   }, []);
 
   return (
@@ -22,8 +25,8 @@ function App() {
       <div className="App">
         {window.location.pathname !== '/' && window.location.pathname !== '/register' && <Header />}
         <Routes>
-          <Route path="/" element={loggedIn ? <Home /> : <LoginRegister />} />
-          <Route path="/register" element={<Register />} />
+          <Route path="/" element={loggedIn ? <Home /> : <LoginRegister setLoggedIn={setLoggedIn} setUserEmail={setUserEmail} />} />
+          <Route path="/register" element={<Register setLoggedIn={setLoggedIn} setUserEmail={setUserEmail} />} />
           <Route path="/home" element={<Home />} />
           <Route path="/about" element={<About />} />
           <Route path="/allorgs" element={<AllOrgs />} />
