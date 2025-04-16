@@ -30,46 +30,47 @@ const Home = () => {
   }, []);
 
   return (
-    <div className="main-content">
-      <main style={{ padding: '5px' }}>
+    <div style={{ padding: '20px', textAlign: 'center' }}>
+      <main>
         <img
           src={headerBanner}
           alt="Header Banner"
-          style={{ width: '100%', height: '380px', margin: '5px 0' }}
+          style={{ width: '100%', height: '380px', marginBottom: '20px' }}
         />
         <h2>Recommended Organizations</h2>
         <div style={{ 
-                  display: 'flex', 
-                  flexWrap: 'wrap', 
-                  gap: '20px', 
-                  justifyContent: 'center' 
-                }}>
-                  {recommendedOrgs.map((org, index) => (
-                    <div
-                      key={index}
-                      style={{
-                        border: '1px solid #ccc',
-                        borderRadius: '8px',
-                        padding: '16px',
-                        width: '250px',
-                        textAlign: 'center',
-                      }}
-                    >
-                      <img
-                        src={`/org_images/${org.logo}`}
-                        alt={`${org.name} logo`}
-                        style={{
-                          width: '100%',
-                          height: '150px',
-                          objectFit: 'contain',
-                          marginBottom: '10px',
-                        }}
-                      />
-                      <h3>{org.name}</h3>
-                    </div>
-                  ))}
-                </div>
-
+          display: 'flex', 
+          flexWrap: 'wrap', 
+          gap: '20px', 
+          justifyContent: 'center', 
+          marginTop: '20px' 
+        }}>
+          {recommendedOrgs.map((org, index) => (
+            <div
+              key={index}
+              style={{
+                border: '1px solid #ccc',
+                borderRadius: '8px',
+                padding: '16px',
+                width: '250px',
+                backgroundColor: '#fff',
+                boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+              }}
+            >
+              <img
+                src={`/org_images/${org.logo}`}
+                alt={`${org.name} logo`}
+                style={{
+                  width: '100%',
+                  height: '150px',
+                  objectFit: 'contain',
+                  marginBottom: '10px',
+                }}
+              />
+              <h3>{org.name}</h3>
+            </div>
+          ))}
+        </div>
       </main>
     </div>
   );
