@@ -55,3 +55,14 @@ def get_organizations():
     df = pd.read_csv(csv_path)
     data = df.fillna('').to_dict(orient="records")
     return data
+
+@app.get("/backend/users-list")
+def get_users():
+    csv_path = "./data/Users_Master.csv"
+    try:
+        df = pd.read_csv(csv_path, quotechar='"')
+        data = df.fillna('').to_dict(orient="records")
+        return data
+    except Exception as e:
+        print("Error loading Users_Master.csv:", e)
+        raise HTTPException(status_code=500, detail=str(e))

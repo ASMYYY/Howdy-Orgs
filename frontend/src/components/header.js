@@ -1,10 +1,16 @@
 import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import logo from './images/logo.jpeg';
-
 
 const Header = () => {
   const location = useLocation();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    localStorage.removeItem('loggedIn');
+    navigate('/');
+    window.location.reload();
+  };
 
   return (
     <>
@@ -19,7 +25,7 @@ const Header = () => {
         <div style={{ display: 'flex', alignItems: 'center' }}>
           <img src={logo} alt="Logo" style={{ height: '60px', marginRight: '15px' }} />
         </div>
-        <nav>
+        <nav style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
           <ul style={{ display: 'flex', gap: '20px', listStyle: 'none', margin: 0, padding: 0 }}>
             <li><Link to="/" style={{
               textDecoration: 'none',
@@ -46,6 +52,21 @@ const Header = () => {
               borderBottom: location.pathname === '/about' ? '2px solid #ffffff' : 'none'
             }}>About Us</Link></li>
           </ul>
+          <button
+            onClick={handleLogout}
+            style={{
+              marginLeft: '20px',
+              padding: '8px 16px',
+              backgroundColor: '#fff',
+              color: '#500000',
+              border: 'none',
+              borderRadius: '4px',
+              fontWeight: 'bold',
+              cursor: 'pointer'
+            }}
+          >
+            Logout
+          </button>
         </nav>
       </header>
     </>

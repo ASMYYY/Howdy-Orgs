@@ -3,15 +3,24 @@ import headerBanner from './images/header.png';
 
 const Home = () => {
   const [recommendedOrgs, setRecommendedOrgs] = useState([]);
+  const [welcomeMsg, setWelcomeMsg] = useState('');
+
+  useEffect(() => {
+    const userName = localStorage.getItem('userName');
+    if (userName) {
+      setWelcomeMsg(`Welcome ${userName}!`);
+      setTimeout(() => {
+        setWelcomeMsg('');
+      }, 3000); // 3 seconds flash
+    }
+  }, []);
 
   useEffect(() => {
     fetch('http://localhost:8000/backend/bm25', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        user: 'Neha Sharma',
+        user: localStorage.getItem('userName') || '',
         query: 'Spiritual, Honors, Service',
       }),
     })
@@ -37,13 +46,32 @@ const Home = () => {
           alt="Header Banner"
           style={{ width: '100%', height: '380px', marginBottom: '20px' }}
         />
-        <h2>Recommended Organizations</h2>
-        <div style={{ 
-          display: 'flex', 
-          flexWrap: 'wrap', 
-          gap: '20px', 
-          justifyContent: 'center', 
-          marginTop: '20px' 
+
+        {welcomeMsg && (
+          <div style={{
+            backgroundColor: '#dff0d8',
+            color: '#3c763d',
+            padding: '12px 20px',
+            borderRadius: '6px',
+            marginBottom: '25px',
+            maxWidth: '600px',
+            marginLeft: 'auto',
+            marginRight: 'auto',
+            fontSize: '1.1rem',
+            fontWeight: '500',
+          }}>
+            {welcomeMsg}
+          </div>
+        )}
+
+        <h2>Recommended Organizations for you!</h2>
+
+        <div style={{
+          display: 'flex',
+          flexWrap: 'wrap',
+          gap: '20px',
+          justifyContent: 'center',
+          marginTop: '20px'
         }}>
           {recommendedOrgs.map((org, index) => (
             <div

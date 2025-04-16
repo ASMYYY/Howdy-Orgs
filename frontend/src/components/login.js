@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import Papa from 'papaparse';
 import { useNavigate } from 'react-router-dom';
 
 const LoginRegister = () => {
-  const [formType, setFormType] = useState('login');
   const [email, setEmail] = useState('');
   const [pwd, setPwd] = useState('');
   const [message, setMessage] = useState('');
@@ -17,18 +15,21 @@ const LoginRegister = () => {
   }, [navigate]);
 
   useEffect(() => {
-    fetch('/backend/data/Users_Master.csv')
-      .then(res => res.text())
-      .then(csv => {
-        Papa.parse(csv, {
-          header: true,
-          skipEmptyLines: true,
-          complete: results => setUsers(results.data)
-        });
+    fetch('http://localhost:8000/backend/users-list')
+      .then(res => res.json())
+      .then(data => setUsers(data))
+      .catch(err => {
+        console.error("Failed to fetch users list", err);
+        setMessage('Failed to load user data.');
       });
   }, []);
 
   const handleLogin = () => {
+    if (users.length === 0) {
+      setMessage('Still loading user data. Please try again shortly.');
+      return;
+    }
+
     const user = users.find(user =>
       user?.Email?.trim().toLowerCase() === email.trim().toLowerCase() &&
       user?.PWD === pwd
@@ -37,7 +38,10 @@ const LoginRegister = () => {
     if (user) {
       localStorage.setItem('loggedIn', 'true');
       localStorage.setItem('userName', user.Name);
-      navigate('/home');
+
+      setTimeout(() => {
+        navigate('/home');
+      }, 100);
     } else {
       setMessage('Invalid credentials');
     }
