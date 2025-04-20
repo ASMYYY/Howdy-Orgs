@@ -5,6 +5,8 @@ const AllOrgs = () => {
   const [orgs, setOrgs] = useState([]);
   const [displayLimit, setDisplayLimit] = useState(20);
   const [currentPage, setCurrentPage] = useState(1);
+  const [loading, setLoading] = useState(true);
+
   const userEmail = localStorage.getItem('userEmail') || '';
   const userName = localStorage.getItem('userName') || 'you';
   const interests = JSON.parse(localStorage.getItem('interests') || '[]');
@@ -12,17 +14,20 @@ const AllOrgs = () => {
 
   useEffect(() => {
     const fetchRankedOrgs = async () => {
+      setLoading(true);
       try {
         const rankedOrgs = await getSBERTOrgs(userEmail);
         if (!Array.isArray(rankedOrgs)) {
           console.error("Unexpected response from backend:", rankedOrgs);
           setOrgs([]);
-          return;
+        } else {
+          setOrgs(rankedOrgs);
         }
-        setOrgs(rankedOrgs);
       } catch (error) {
         console.error("Error fetching SBERT orgs:", error);
         setOrgs([]);
+      } finally {
+        setLoading(false);
       }
     };
     fetchRankedOrgs();
@@ -57,34 +62,55 @@ const AllOrgs = () => {
         </select>
       </div>
 
-      <div style={{
-        display: 'flex',
-        flexWrap: 'wrap',
-        justifyContent: 'center',
-        gap: '20px',
-        marginTop: '20px'
-      }}>
-        {paginatedOrgs.map((org, index) => (
-          <div key={index} style={{
-            border: '1px solid #ccc',
-            borderRadius: '8px',
-            padding: '16px',
-            width: '250px',
-            backgroundColor: '#fff',
-            boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
-          }}>
-            <strong>{org.title}</strong>
-            <p style={{ color: '#666' }}>Match: {org.match_percentage}%</p>
-            {org.keywords && Array.isArray(org.keywords) && org.keywords.length > 0 && (
-              <p style={{ fontSize: '0.85rem', color: '#444', marginTop: '0.5rem' }}>
-                <strong>Tags:</strong> {org.keywords.slice(0, 3).join(', ')}
-              </p>
-            )}
-          </div>
-        ))}
-      </div>
+      {loading ? (
+        <div style={{ marginTop: '2rem' }}>
+          <div style={{
+            border: '4px solid #f3f3f3',
+            borderTop: '4px solid #500000',
+            borderRadius: '50%',
+            width: '40px',
+            height: '40px',
+            margin: '0 auto',
+            animation: 'spin 1s linear infinite'
+          }} />
+          <style>
+            {`@keyframes spin {
+              0% { transform: rotate(0deg); }
+              100% { transform: rotate(360deg); }
+            }`}
+          </style>
+          <p style={{ color: '#555', marginTop: '0.75rem' }}>Loading recommendations...</p>
+        </div>
+      ) : (
+        <div style={{
+          display: 'flex',
+          flexWrap: 'wrap',
+          justifyContent: 'center',
+          gap: '20px',
+          marginTop: '20px'
+        }}>
+          {paginatedOrgs.map((org, index) => (
+            <div key={index} style={{
+              border: '1px solid #ccc',
+              borderRadius: '8px',
+              padding: '16px',
+              width: '250px',
+              backgroundColor: '#fff',
+              boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
+            }}>
+              <strong>{org.title}</strong>
+              <p style={{ color: '#666' }}>Match: {org.match_percentage}%</p>
+              {org.keywords && Array.isArray(org.keywords) && org.keywords.length > 0 && (
+                <p style={{ fontSize: '0.85rem', color: '#444', marginTop: '0.5rem' }}>
+                  <strong>Tags:</strong> {org.keywords.slice(0, 3).join(', ')}
+                </p>
+              )}
+            </div>
+          ))}
+        </div>
+      )}
 
-      {displayLimit !== "all" && (
+      {!loading && displayLimit !== "all" && (
         <div style={{ marginTop: '30px' }}>
           <button
             disabled={currentPage === 1}
