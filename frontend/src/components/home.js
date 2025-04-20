@@ -16,12 +16,14 @@ const Home = () => {
   }, []);
 
   useEffect(() => {
+    const interests = JSON.parse(localStorage.getItem('interests') || '[]');
+    const query = interests.join(', ');
     fetch('http://localhost:8000/backend/bm25', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         user: localStorage.getItem('userName') || '',
-        query: 'Spiritual, Honors, Service',
+        query: query,
       }),
     })
       .then((response) => response.json())

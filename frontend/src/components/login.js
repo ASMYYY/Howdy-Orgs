@@ -38,6 +38,12 @@ const LoginRegister = () => {
     if (user) {
       localStorage.setItem('loggedIn', 'true');
       localStorage.setItem('userName', user.Name);
+      localStorage.setItem('userEmail', user.Email);
+      localStorage.setItem('interests', JSON.stringify([
+        user.Interest1,
+        user.Interest2,
+        user.Interest3
+      ]));
 
       setTimeout(() => {
         navigate('/home');
