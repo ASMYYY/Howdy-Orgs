@@ -75,6 +75,11 @@ const AllOrgs = () => {
           }}>
             <strong>{org.title}</strong>
             <p style={{ color: '#666' }}>Match: {org.match_percentage}%</p>
+            {org.keywords && Array.isArray(org.keywords) && org.keywords.length > 0 && (
+              <p style={{ fontSize: '0.85rem', color: '#444', marginTop: '0.5rem' }}>
+                <strong>Tags:</strong> {org.keywords.slice(0, 3).join(', ')}
+              </p>
+            )}
           </div>
         ))}
       </div>

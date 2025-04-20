@@ -73,9 +73,14 @@ class SBERTRecommender:
         result["SBERT_score"] = scores.cpu().numpy()
         result["match_percentage"] = match_percentages
 
+        # ✅ Combine keyword columns into a single list
+        result["keywords"] = result[["Keyword1", "Keyword2", "Keyword3"]].values.tolist()
+
+        # ✅ Return relevant fields, including new 'keywords' list
         return result.sort_values(by="SBERT_score", ascending=False).reset_index(drop=True)[
-            ["primary_key", "title", "match_percentage", "SBERT_score", "Keyword1", "Keyword2", "Keyword3"]
+            ["primary_key", "title", "match_percentage", "SBERT_score", "keywords"]
         ]
+
 
 
     # def get_ranked_orgs(self, user_id: int):
