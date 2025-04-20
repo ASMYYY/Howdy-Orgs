@@ -94,11 +94,15 @@ const Register = () => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(form)
       });
-      if (!response.ok) {
-        throw new Error('Failed to register user');
-      }
-      const result = await response.json();
-      console.log(result.message, result.id);
+
+      if (!response.ok) throw new Error('Failed to register or update user');
+
+      // ✅ Save to localStorage and log in
+      localStorage.setItem('userEmail', form.Email);
+      localStorage.setItem('userName', form.Name);
+      localStorage.setItem('interests', JSON.stringify([form.Interest1, form.Interest2, form.Interest3]));
+      localStorage.setItem('clubs', form.Clubs.join(', '));
+
       navigate('/home');
     } catch (error) {
       console.error('Registration error:', error);
@@ -153,27 +157,24 @@ const Register = () => {
             />
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-            <label style={{ minWidth: '100px', fontSize: '0.9rem', color: '#7c6f5f' }}>Interest1</label>
-            <select name="Interest1" value={form.Interest1} onChange={handleChange} style={{ padding: '0.75rem', borderRadius: '6px', border: '1px solid #ccc', backgroundColor: '#eef2fa' }}>
-              <option value="">Select Interest</option>
-              {interests.filter(i => i !== form.Interest2 && i !== form.Interest3).map(i => (
-                <option key={i} value={i}>{i}</option>
-              ))}
-            </select>
-            <label style={{ minWidth: '100px', fontSize: '0.9rem', color: '#7c6f5f' }}>Interest2</label>
-            <select name="Interest2" value={form.Interest2} onChange={handleChange} style={{ padding: '0.75rem', borderRadius: '6px', border: '1px solid #ccc', backgroundColor: '#eef2fa' }}>
-              <option value="">Select Interest</option>
-              {interests.filter(i => i !== form.Interest1 && i !== form.Interest3).map(i => (
-                <option key={i} value={i}>{i}</option>
-              ))}
-            </select>
-            <label style={{ minWidth: '100px', fontSize: '0.9rem', color: '#7c6f5f' }}>Interest3</label>
-            <select name="Interest3" value={form.Interest3} onChange={handleChange} style={{ padding: '0.75rem', borderRadius: '6px', border: '1px solid #ccc', backgroundColor: '#eef2fa' }}>
-              <option value="">Select Interest</option>
-              {interests.filter(i => i !== form.Interest1 && i !== form.Interest2).map(i => (
-                <option key={i} value={i}>{i}</option>
-              ))}
-            </select>
+            {['Interest1', 'Interest2', 'Interest3'].map((interestKey, i) => (
+              <div key={interestKey}>
+                <label style={{ fontSize: '0.9rem', color: '#7c6f5f' }}>{interestKey}</label>
+                <select
+                  name={interestKey}
+                  value={form[interestKey]}
+                  onChange={handleChange}
+                  style={{ padding: '0.75rem', borderRadius: '6px', border: '1px solid #ccc', backgroundColor: '#eef2fa' }}
+                >
+                  <option value="">Select Interest</option>
+                  {interests
+                    .filter(i => i !== form.Interest1 && i !== form.Interest2 && i !== form.Interest3 || i === form[interestKey])
+                    .map(i => (
+                      <option key={i} value={i}>{i}</option>
+                    ))}
+                </select>
+              </div>
+            ))}
           </div>
           <label style={{ fontSize: '0.9rem', color: '#7c6f5f' }}>Clubs</label>
           <Select
