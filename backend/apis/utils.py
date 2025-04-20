@@ -54,14 +54,13 @@ class SBERTRecommender:
         ])
         return f"{title} {desc} {keywords}".strip()
 
-    def get_ranked_orgs(self, user_id: int):
+    def get_ranked_orgs_by_email(self, email: str):
         user_df = pd.read_csv("./data/Users_Master.csv")
-
-        # Find user by ID
-        user_row = user_df[user_df['ID'] == user_id]
-        if user_row.empty:
-            raise ValueError(f"No user with ID {user_id}")
+        user_row = user_df[user_df['Email'].str.strip().str.lower() == email.strip().lower()]
         
+        if user_row.empty:
+            raise ValueError(f"No user with email {email}")
+
         user = user_row.iloc[0]
         query = f"{user['Interest1']} {user['Interest2']} {user['Interest3']}"
 
@@ -77,3 +76,28 @@ class SBERTRecommender:
         return result.sort_values(by="SBERT_score", ascending=False).reset_index(drop=True)[
             ["primary_key", "title", "match_percentage", "SBERT_score", "Keyword1", "Keyword2", "Keyword3"]
         ]
+
+
+    # def get_ranked_orgs(self, user_id: int):
+    #     user_df = pd.read_csv("./data/Users_Master.csv")
+
+    #     # Find user by ID
+    #     user_row = user_df[user_df['ID'] == user_id]
+    #     if user_row.empty:
+    #         raise ValueError(f"No user with ID {user_id}")
+        
+    #     user = user_row.iloc[0]
+    #     query = f"{user['Interest1']} {user['Interest2']} {user['Interest3']}"
+
+    #     query_embedding = self.model.encode(query, convert_to_tensor=True, normalize_embeddings=True)
+    #     scores = util.dot_score(query_embedding, self.corpus_embeddings)[0]
+    #     max_score = torch.max(scores).item() if torch.max(scores).item() > 0 else 1
+    #     match_percentages = [round((s.item() / max_score) * 100, 2) for s in scores]
+
+    #     result = self.org_df.copy()
+    #     result["SBERT_score"] = scores.cpu().numpy()
+    #     result["match_percentage"] = match_percentages
+
+    #     return result.sort_values(by="SBERT_score", ascending=False).reset_index(drop=True)[
+    #         ["primary_key", "title", "match_percentage", "SBERT_score", "Keyword1", "Keyword2", "Keyword3"]
+    #     ]

@@ -5,12 +5,15 @@ const AllOrgs = () => {
   const [orgs, setOrgs] = useState([]);
   const [displayLimit, setDisplayLimit] = useState(20);
   const [currentPage, setCurrentPage] = useState(1);
-  const userId = 1;
+  const userEmail = localStorage.getItem('userEmail') || '';
+  const userName = localStorage.getItem('userName') || 'you';
+  const interests = JSON.parse(localStorage.getItem('interests') || '[]');
+  const interestStr = interests.filter(Boolean).join(', ');
 
   useEffect(() => {
     const fetchRankedOrgs = async () => {
       try {
-        const rankedOrgs = await getSBERTOrgs(userId);
+        const rankedOrgs = await getSBERTOrgs(userEmail);
         if (!Array.isArray(rankedOrgs)) {
           console.error("Unexpected response from backend:", rankedOrgs);
           setOrgs([]);
@@ -23,7 +26,7 @@ const AllOrgs = () => {
       }
     };
     fetchRankedOrgs();
-  }, [userId]);
+  }, [userEmail]);
 
   const handleLimitChange = (e) => {
     const value = e.target.value === "all" ? "all" : parseInt(e.target.value);
@@ -39,7 +42,10 @@ const AllOrgs = () => {
 
   return (
     <div style={{ padding: '20px', textAlign: 'center' }}>
-      <h2>Recommended Organizations</h2>
+      <h2>
+        Recommended Organizations for {userName}
+        {interestStr && ` based on the following interests: ${interestStr}`}
+      </h2>
 
       <div style={{ marginBottom: '20px' }}>
         <label htmlFor="limitSelect" style={{ marginRight: '10px' }}>Show:</label>
