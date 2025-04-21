@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { getSBERTOrgs } from './api/getSBERTOrgs';
 
 const AllOrgs = () => {
@@ -90,22 +91,29 @@ const AllOrgs = () => {
           marginTop: '20px'
         }}>
           {paginatedOrgs.map((org, index) => (
-            <div key={index} style={{
-              border: '1px solid #ccc',
-              borderRadius: '8px',
-              padding: '16px',
-              width: '250px',
-              backgroundColor: '#fff',
-              boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
-            }}>
-              <strong>{org.title}</strong>
-              <p style={{ color: '#666' }}>Match: {org.match_percentage}%</p>
-              {org.keywords && Array.isArray(org.keywords) && org.keywords.length > 0 && (
-                <p style={{ fontSize: '0.85rem', color: '#444', marginTop: '0.5rem' }}>
-                  <strong>Tags:</strong> {org.keywords.slice(0, 3).join(', ')}
-                </p>
-              )}
-            </div>
+            <Link
+              key={index}
+              to={`/sbert-org/${org.primary_key.split('_')[0]}`}
+              state={{ org }}
+              style={{ textDecoration: 'none', color: 'inherit' }}
+            >
+              <div style={{
+                border: '1px solid #ccc',
+                borderRadius: '8px',
+                padding: '16px',
+                width: '250px',
+                backgroundColor: '#fff',
+                boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
+              }}>
+                <strong>{org.title}</strong>
+                <p style={{ color: '#666' }}>Match: {org.match_percentage}%</p>
+                {org.keywords && Array.isArray(org.keywords) && org.keywords.length > 0 && (
+                  <p style={{ fontSize: '0.85rem', color: '#444', marginTop: '0.5rem' }}>
+                    <strong>Tags:</strong> {org.keywords.slice(0, 3).join(', ')}
+                  </p>
+                )}
+              </div>
+            </Link>
           ))}
         </div>
       )}
