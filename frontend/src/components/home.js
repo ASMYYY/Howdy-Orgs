@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom'; // ✅ added for routing
 import headerBanner from './images/header.png';
 
 const Home = () => {
@@ -18,6 +19,7 @@ const Home = () => {
   useEffect(() => {
     const interests = JSON.parse(localStorage.getItem('interests') || '[]');
     const query = interests.join(', ');
+
     fetch('http://localhost:8000/backend/bm25', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -29,11 +31,7 @@ const Home = () => {
       .then((response) => response.json())
       .then((data) => {
         const topThree = data.ranked_docs.slice(0, 3);
-        const formatted = topThree.map((org) => ({
-          name: org.name,
-          logo: org.logo,
-        }));
-        setRecommendedOrgs(formatted);
+        setRecommendedOrgs(topThree);
       })
       .catch((err) => {
         console.error('Failed to fetch orgs:', err);
@@ -76,29 +74,35 @@ const Home = () => {
           marginTop: '20px'
         }}>
           {recommendedOrgs.map((org, index) => (
-            <div
+            <Link
               key={index}
-              style={{
-                border: '1px solid #ccc',
-                borderRadius: '8px',
-                padding: '16px',
-                width: '250px',
-                backgroundColor: '#fff',
-                boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
-              }}
+              to={`/org/${org.logo.split('_')[0]}`}  // extract org ID from logo
+              state={{ org }}
+              style={{ textDecoration: 'none', color: 'inherit' }}
             >
-              <img
-                src={`/org_images/${org.logo}`}
-                alt={`${org.name} logo`}
+              <div
                 style={{
-                  width: '100%',
-                  height: '150px',
-                  objectFit: 'contain',
-                  marginBottom: '10px',
+                  border: '1px solid #ccc',
+                  borderRadius: '8px',
+                  padding: '16px',
+                  width: '250px',
+                  backgroundColor: '#fff',
+                  boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
                 }}
-              />
-              <h3>{org.name}</h3>
-            </div>
+              >
+                <img
+                  src={`/org_images/${org.logo}`}
+                  alt={`${org.name} logo`}
+                  style={{
+                    width: '100%',
+                    height: '150px',
+                    objectFit: 'contain',
+                    marginBottom: '10px',
+                  }}
+                />
+                <h3>{org.name}</h3>
+              </div>
+            </Link>
           ))}
         </div>
       </main>
