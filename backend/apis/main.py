@@ -1,4 +1,5 @@
 from fastapi import FastAPI, HTTPException
+from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from .utils import SBERTRecommender
@@ -6,7 +7,7 @@ from .utils import BM25Helper
 from .register import router as register_router
 from .update_user import router as update_profile_router  # ✅ import here
 import pandas as pd
-import os
+import json
 
 app = FastAPI()
 
@@ -20,12 +21,15 @@ app.add_middleware(
 
 # ✅ Include routers
 app.include_router(register_router)
-app.include_router(update_profile_router)  # ✅ add this line
+app.include_router(update_profile_router)
 
 # BM25 setup
 bmobj = BM25Helper()
 bmobj.load_data()
 bmobj.store_corpus()
+
+with open("./data_preprocessing/tamu_organizations_img.json", "r") as f:
+    fallback_data = json.load(f)
 
 class Item(BaseModel):
     user: str
@@ -39,6 +43,24 @@ async def create_item(item: Item):
         top_n = bmobj.get_ranks(query)
         item_dict.update({"ranked_docs": top_n})
     return item_dict
+
+@app.get("/org/{org_id}")
+def get_org(org_id: int):
+    for org in bmobj.data:
+        if "logo" in org and org["logo"].startswith(f"{org_id}_"):
+            return JSONResponse(content=org)
+    raise HTTPException(status_code=404, detail="Organization not found")
+
+@app.get("/sbert-org/{primary_key}")
+def get_sbert_org(primary_key: str):
+    for org in fallback_data:
+        logo = org.get("logo", "")
+        logo_prefix = logo.split('_')[0]
+        if logo_prefix == primary_key:
+            print("MATCH FOUND:", org)
+            return org
+    raise HTTPException(status_code=404, detail="Organization not found")
+
 
 # SBERT setup
 sbert_obj = SBERTRecommender()

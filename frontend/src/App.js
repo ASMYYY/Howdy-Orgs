@@ -7,6 +7,7 @@ import AllOrgs from './components/allorgs';
 import Profile from './components/profile';
 import LoginRegister from './components/login';
 import Register from './components/register';
+import OrgDetails from './components/orgdetails';
 import { useState, useEffect } from 'react';
 
 const AppWrapper = () => {
@@ -37,6 +38,9 @@ const AppWrapper = () => {
         <Route path="/about" element={<About />} />
         <Route path="/allorgs" element={<AllOrgs />} />
         <Route path="/profile" element={<Profile />} />
+        <Route path="/org/:orgId" element={<OrgDetails />} />
+        <Route path="/sbert-org/:primary_key" element={<OrgDetails />} />
+
       </Routes>
     </div>
   );
