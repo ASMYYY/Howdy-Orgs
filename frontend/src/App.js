@@ -7,7 +7,7 @@ import AllOrgs from './components/allorgs';
 import Profile from './components/profile';
 import LoginRegister from './components/login';
 import Register from './components/register';
-import OrgDetails from './components/orgdetails';
+import OrgDetails from './components/orgDetails';
 import { useState, useEffect } from 'react';
 
 const AppWrapper = () => {

@@ -58,86 +58,124 @@ const LoginRegister = () => {
   };
 
   return (
-    <div style={{ minHeight: '100vh', backgroundColor: '#fdf6ee', display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '1rem' }}>
+    <div style={{
+      minHeight: '100vh',
+      backgroundColor: '#fdf6ee',
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      padding: '1rem'
+    }}>
       <div style={{
-        padding: '2rem',
         width: '100%',
-        maxWidth: '480px',
-        borderRadius: '12px',
-        boxShadow: '0 6px 20px rgba(0,0,0,0.1)',
-        backgroundColor: 'white',
+        maxWidth: '450px',
+        backgroundColor: '#fff',
+        borderRadius: '16px',
+        padding: '2rem',
+        boxShadow: '0 10px 30px rgba(0, 0, 0, 0.1)',
         border: '1px solid #e0dcdc'
       }}>
-        <h1 style={{ fontSize: '3rem', fontWeight: 'bold', color: '#500000', marginBottom: '2rem', textAlign: 'left' }}>LOG IN</h1>
+        <h1 style={{
+          fontSize: '2.25rem',
+          fontWeight: '700',
+          color: '#500000',
+          marginBottom: '1.5rem',
+          textAlign: 'center'
+        }}>
+          Log In
+        </h1>
 
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-          <hr />
-
-          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-            <label style={{ minWidth: '70px', fontSize: '0.875rem', color: '#7c6f5f' }}>Email</label>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+          <div>
+            <label style={{
+              display: 'block',
+              marginBottom: '0.5rem',
+              fontSize: '0.95rem',
+              color: '#444'
+            }}>Email</label>
             <input
               type="email"
-              style={{
-                padding: '0.75rem',
-                borderRadius: '6px',
-                border: '1px solid #ccc',
-                backgroundColor: '#eef2fa',
-                width: '100%'
-              }}
               value={email}
               onChange={e => setEmail(e.target.value)}
+              style={{
+                width: '80%',
+                padding: '0.75rem 1rem',
+                borderRadius: '8px',
+                border: '1px solid #ccc',
+                backgroundColor: '#f8f9fb',
+                fontSize: '1rem'
+              }}
             />
           </div>
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-            <label style={{ minWidth: '70px', fontSize: '0.875rem', color: '#7c6f5f' }}>Password</label>
+          <div>
+            <label style={{
+              display: 'block',
+              marginBottom: '0.5rem',
+              fontSize: '0.95rem',
+              color: '#444'
+            }}>Password</label>
             <input
               type="password"
-              style={{
-                padding: '0.75rem',
-                borderRadius: '6px',
-                border: '1px solid #ccc',
-                backgroundColor: '#eef2fa',
-                width: '100%'
-              }}
               value={pwd}
               onChange={e => setPwd(e.target.value)}
+              style={{
+                width: '80%',
+                padding: '0.75rem 1rem',
+                borderRadius: '8px',
+                border: '1px solid #ccc',
+                backgroundColor: '#f8f9fb',
+                fontSize: '1rem'
+              }}
             />
           </div>
 
-          <div style={{ display: 'flex', justifyContent: 'center', gap: '1rem', marginTop: '1rem' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', marginTop: '1.5rem' }}>
             <button
               onClick={handleLogin}
               style={{
                 backgroundColor: '#500000',
-                color: 'white',
+                color: '#fff',
                 fontWeight: '600',
-                padding: '0.75rem 2rem',
-                borderRadius: '999px',
+                padding: '0.75rem',
+                fontSize: '1rem',
                 border: 'none',
-                cursor: 'pointer'
+                borderRadius: '8px',
+                cursor: 'pointer',
+                width: '100%'
               }}
             >
-              Next
+              Login
             </button>
 
             <button
               onClick={handleRegisterRedirect}
               style={{
-                backgroundColor: '#500000',
-                color: 'white',
+                backgroundColor: '#787878',
+                color: '#fff',
                 fontWeight: '600',
-                padding: '0.75rem 2rem',
-                borderRadius: '999px',
+                padding: '0.75rem',
+                fontSize: '1rem',
                 border: 'none',
-                cursor: 'pointer'
+                borderRadius: '8px',
+                cursor: 'pointer',
+                width: '100%'
               }}
             >
               Register
             </button>
           </div>
 
-          {message && <p style={{ color: 'red', textAlign: 'center' }}>{message}</p>}
+          {message && (
+            <p style={{
+              marginTop: '1rem',
+              color: 'red',
+              textAlign: 'center',
+              fontSize: '0.95rem'
+            }}>
+              {message}
+            </p>
+          )}
         </div>
       </div>
     </div>
