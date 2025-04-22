@@ -97,12 +97,10 @@ const Register = () => {
 
       if (!response.ok) throw new Error('Failed to register or update user');
 
-      // ✅ Save to localStorage and log in
       localStorage.setItem('userEmail', form.Email);
       localStorage.setItem('userName', form.Name);
       localStorage.setItem('interests', JSON.stringify([form.Interest1, form.Interest2, form.Interest3]));
       localStorage.setItem('clubs', form.Clubs.join(', '));
-
       navigate('/home');
     } catch (error) {
       console.error('Registration error:', error);
@@ -110,106 +108,135 @@ const Register = () => {
   };
 
   return (
-    <div style={{ minHeight: '100vh', backgroundColor: '#fdf6ee', display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '1rem' }}>
+    <div style={{
+      minHeight: '100vh',
+      backgroundColor: '#fdf6ee',
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      padding: '1rem'
+    }}>
       <div style={{
-        padding: '2rem',
+        backgroundColor: '#fff',
+        borderRadius: '16px',
+        padding: '2.5rem',
         width: '100%',
-        maxWidth: '600px',
-        borderRadius: '12px',
-        boxShadow: '0 6px 20px rgba(0,0,0,0.1)',
-        backgroundColor: 'white',
+        maxWidth: '620px',
+        boxShadow: '0 10px 30px rgba(0, 0, 0, 0.1)',
         border: '1px solid #e0dcdc'
       }}>
-        <h1 style={{ fontSize: '3rem', fontWeight: 'bold', color: '#500000', marginBottom: '2rem' }}>Registration Form</h1>
-        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+        <h1 style={{
+          fontSize: '2.5rem',
+          fontWeight: '700',
+          color: '#500000',
+          marginBottom: '2rem',
+          textAlign: 'center'
+        }}>Register</h1>
+
+        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+          {/* Basic Info */}
           {['Email', 'Name'].map(field => (
-            <div key={field} style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-              <label style={{ minWidth: '100px', fontSize: '0.9rem', color: '#7c6f5f', marginRight: '1rem' }}>{field}</label>
+            <div key={field} style={{ display: 'flex', flexDirection: 'column' }}>
+              <label style={{ fontSize: '0.95rem', marginBottom: '0.5rem', color: '#333' }}>{field}</label>
               <input
                 type="text"
                 name={field}
                 value={form[field]}
                 onChange={handleChange}
                 style={{
-                  flex: 1,
                   padding: '0.75rem',
-                  borderRadius: '6px',
+                  borderRadius: '8px',
                   border: '1px solid #ccc',
-                  backgroundColor: '#eef2fa'
+                  backgroundColor: '#f7f9fc',
+                  fontSize: '1rem'
                 }}
               />
             </div>
           ))}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-            <label style={{ minWidth: '100px', fontSize: '0.9rem', color: '#7c6f5f', marginRight: '1rem' }}>Password</label>
+
+          {/* Password */}
+          <div style={{ display: 'flex', flexDirection: 'column' }}>
+            <label style={{ fontSize: '0.95rem', marginBottom: '0.5rem', color: '#333' }}>Password</label>
             <input
               type="password"
               name="PWD"
               value={form.PWD}
               onChange={handleChange}
               style={{
-                flex: 1,
                 padding: '0.75rem',
-                borderRadius: '6px',
+                borderRadius: '8px',
                 border: '1px solid #ccc',
-                backgroundColor: '#eef2fa'
+                backgroundColor: '#f7f9fc',
+                fontSize: '1rem'
               }}
             />
           </div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-            {['Interest1', 'Interest2', 'Interest3'].map((interestKey, i) => (
-              <div key={interestKey}>
-                <label style={{ fontSize: '0.9rem', color: '#7c6f5f' }}>{interestKey}</label>
+
+          {/* Interests */}
+          <div>
+            <label style={{ fontSize: '1rem', fontWeight: '600', marginBottom: '0.75rem', color: '#444' }}>Select your top 3 Interests</label>
+            <div style={{ marginTop: '1rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+              {['Interest1', 'Interest2', 'Interest3'].map((interestKey) => (
                 <select
+                  key={interestKey}
                   name={interestKey}
                   value={form[interestKey]}
                   onChange={handleChange}
-                  style={{ padding: '0.75rem', borderRadius: '6px', border: '1px solid #ccc', backgroundColor: '#eef2fa' }}
+                  style={{
+                    padding: '0.75rem',
+                    borderRadius: '8px',
+                    border: '1px solid #ccc',
+                    backgroundColor: '#f7f9fc',
+                    fontSize: '1rem'
+                  }}
                 >
                   <option value="">Select Interest</option>
                   {interests
-                    .filter(i => i !== form.Interest1 && i !== form.Interest2 && i !== form.Interest3 || i === form[interestKey])
+                    .filter(i => i === form[interestKey] || !Object.values(form).includes(i))
                     .map(i => (
                       <option key={i} value={i}>{i}</option>
                     ))}
                 </select>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
-          <label style={{ fontSize: '0.9rem', color: '#7c6f5f' }}>Clubs</label>
-          <Select
-            isMulti
-            name="Clubs"
-            options={clubOptions.map(c => ({ value: c, label: c }))}
-            value={form.Clubs.map(c => ({ value: c, label: c }))}
-            onChange={selected =>
-              setForm({
-                ...form,
-                Clubs: selected.map(s => s.value)
-              })
-            }
-            styles={{
-              control: (base) => ({
-                ...base,
-                padding: '4px',
-                borderRadius: '6px',
-                borderColor: '#ccc',
-                backgroundColor: '#eef2fa'
-              }),
-              menu: base => ({ ...base, zIndex: 100 }),
-              multiValue: base => ({ ...base, backgroundColor: '#ddd' })
-            }}
-          />
+
+          {/* Clubs */}
+          <div>
+            <label style={{ fontSize: '1rem', fontWeight: '600', marginBottom: '0.5rem', display: 'block', color: '#444' }}>Select Clubs</label>
+            <Select
+              isMulti
+              name="Clubs"
+              options={clubOptions.map(c => ({ value: c, label: c }))}
+              value={form.Clubs.map(c => ({ value: c, label: c }))}
+              onChange={selected =>
+                setForm({ ...form, Clubs: selected.map(s => s.value) })
+              }
+              styles={{
+                control: base => ({
+                  ...base,
+                  borderRadius: '8px',
+                  borderColor: '#ccc',
+                  backgroundColor: '#f7f9fc',
+                  fontSize: '0.95rem'
+                }),
+                menu: base => ({ ...base, zIndex: 10 }),
+                multiValue: base => ({ ...base, backgroundColor: '#d9e2ec' })
+              }}
+            />
+          </div>
+
+          {/* Submit */}
           <div style={{ display: 'flex', justifyContent: 'center' }}>
             <button type="submit" style={{
               backgroundColor: '#500000',
-              color: 'white',
+              color: '#fff',
               fontWeight: '600',
               padding: '0.75rem 2rem',
+              fontSize: '1rem',
               borderRadius: '999px',
               border: 'none',
               cursor: 'pointer',
-              fontSize: '1rem',
               marginTop: '1rem'
             }}>
               Submit

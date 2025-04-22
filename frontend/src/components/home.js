@@ -10,9 +10,9 @@ const Home = () => {
     const userName = localStorage.getItem('userName');
     if (userName) {
       setWelcomeMsg(`Welcome ${userName}!`);
-      setTimeout(() => {
-        setWelcomeMsg('');
-      }, 3000); // 3 seconds flash
+      // setTimeout(() => {
+      //   setWelcomeMsg('');
+      // }, 3000); // 3 seconds flash
     }
   }, []);
 
