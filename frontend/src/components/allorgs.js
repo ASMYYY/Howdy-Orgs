@@ -4,6 +4,8 @@ import { getSBERTOrgs } from './api/getSBERTOrgs';
 
 const AllOrgs = () => {
   const [orgs, setOrgs] = useState([]);
+  const [filteredOrgs, setFilteredOrgs] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
   const [displayLimit, setDisplayLimit] = useState(20);
   const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(true);
@@ -21,12 +23,15 @@ const AllOrgs = () => {
         if (!Array.isArray(rankedOrgs)) {
           console.error("Unexpected response from backend:", rankedOrgs);
           setOrgs([]);
+          setFilteredOrgs([]);
         } else {
           setOrgs(rankedOrgs);
+          setFilteredOrgs(rankedOrgs);
         }
       } catch (error) {
         console.error("Error fetching SBERT orgs:", error);
         setOrgs([]);
+        setFilteredOrgs([]);
       } finally {
         setLoading(false);
       }
@@ -40,11 +45,23 @@ const AllOrgs = () => {
     setCurrentPage(1);
   };
 
-  const totalPages = displayLimit === "all" ? 1 : Math.ceil(orgs.length / displayLimit);
+  const handleSearchChange = (e) => {
+    const value = e.target.value;
+    setSearchTerm(value);
+    const filtered = orgs.filter(org =>
+      org.title.toLowerCase().includes(value.toLowerCase())
+    );
+    setFilteredOrgs(filtered);
+    setCurrentPage(1);
+  };
+
+  const totalPages =
+    displayLimit === "all" ? 1 : Math.ceil(filteredOrgs.length / displayLimit);
+
   const paginatedOrgs =
     displayLimit === "all"
-      ? orgs
-      : orgs.slice((currentPage - 1) * displayLimit, currentPage * displayLimit);
+      ? filteredOrgs
+      : filteredOrgs.slice((currentPage - 1) * displayLimit, currentPage * displayLimit);
 
   return (
     <div style={{ padding: '2rem', textAlign: 'center', backgroundColor: '#fff7f0', minHeight: '100vh' }}>
@@ -73,25 +90,50 @@ const AllOrgs = () => {
         )}
       </div>
 
-      <div style={{ marginBottom: '20px' }}>
-        <label htmlFor="limitSelect" style={{ marginRight: '10px', fontWeight: '500' }}>Show:</label>
-        <select
-          id="limitSelect"
-          onChange={handleLimitChange}
-          value={displayLimit}
-          style={{
-            padding: '0.5rem 0.75rem',
-            borderRadius: '6px',
-            border: '1px solid #ccc',
-            backgroundColor: '#fff',
-            fontWeight: '500'
-          }}
-        >
-          <option value="20">20</option>
-          <option value="50">50</option>
-          <option value="100">100</option>
-          <option value="all">All</option>
-        </select>
+      <div style={{
+        marginBottom: '20px',
+        display: 'flex',
+        flexWrap: 'wrap',
+        justifyContent: 'center',
+        alignItems: 'center',
+        gap: '1rem'
+      }}>
+        <div>
+          <label htmlFor="limitSelect" style={{ marginRight: '10px', fontWeight: '500' }}>Show Top:</label>
+          <select
+            id="limitSelect"
+            onChange={handleLimitChange}
+            value={displayLimit}
+            style={{
+              padding: '0.5rem 0.75rem',
+              borderRadius: '6px',
+              border: '1px solid #ccc',
+              backgroundColor: '#fff',
+              fontWeight: '500'
+            }}
+          >
+            <option value="20">20</option>
+            <option value="50">50</option>
+            <option value="100">100</option>
+            <option value="all">All</option>
+          </select>
+        </div>
+
+        <div>
+          <input
+            type="text"
+            value={searchTerm}
+            onChange={handleSearchChange}
+            placeholder="Search organizations..."
+            style={{
+              padding: '0.5rem 0.75rem',
+              borderRadius: '6px',
+              border: '1px solid #ccc',
+              backgroundColor: '#fff',
+              minWidth: '240px'
+            }}
+          />
+        </div>
       </div>
 
       {loading ? (
@@ -172,7 +214,7 @@ const AllOrgs = () => {
         </div>
       )}
 
-      {!loading && displayLimit !== "all" && (
+      {!loading && displayLimit !== "all" && totalPages > 1 && (
         <div style={{ marginTop: '30px' }}>
           <button
             disabled={currentPage === 1}
