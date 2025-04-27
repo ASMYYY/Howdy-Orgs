@@ -26,6 +26,6 @@ npm -i
 npm start
 ```
 
-## 🔗 Key Links
+## Demo
 
 Link for our demo video: https://www.youtube.com/watch?v=r954naOYDRQ
