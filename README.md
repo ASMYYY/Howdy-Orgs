@@ -2,7 +2,7 @@
 
 ![](frontend/src/components/Images/header.png?raw=true)
 
-Howdy Orgs is a smart recommendation platform that helps Texas A&M students quickly discover student organizations that match their personal interests. With over 1,200 clubs on campus, students often feel overwhelmed navigating traditional lists or keyword-based search tools. Our system simplifies the process by combining two powerful methods: BM25 for keyword relevance ranking and SBERT (Sentence-BERT) for semantic matching. This hybrid approach ensures that students receive both contextually and semantically relevant organization recommendations—within seconds of filling out a short interest form.
+Howdy Orgs is a smart recommendation platform that helps Texas A&M students quickly discover student organizations that match their personal interests. With over 1,200 clubs on campus, students often feel overwhelmed navigating traditional lists or keyword-based search tools. Our system simplifies the process by combining two powerful methods: BM25 for keyword relevance ranking and SBERT (Sentence-BERT) for semantic matching. This hybrid approach ensures that students receive both contextually and semantically relevant organization recommendations within seconds of filling out a short interest form.
 
 ## Set up
 ```
