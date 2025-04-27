@@ -1,4 +1,4 @@
-# Howdy-Orgs-Project
+# Howdy-Orgs
 
 ## Set up
 ```
