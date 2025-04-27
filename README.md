@@ -1,5 +1,7 @@
 # Howdy-Orgs
 
+![](frontend/src/components/Images/header.png?raw=true)
+
 ## Set up
 ```
 python -m venv venv
@@ -17,6 +19,7 @@ uvicorn apis.main:app --reload --port 8000
 ## Run frontend
 Run these commands on terminal one to get started with the frontend. Make sure you have node and npm installed
 ```
+cd frontend
 npm -i
 npm start
 ```
