@@ -25,3 +25,6 @@ cd frontend
 npm -i
 npm start
 ```
+## 🔗 Key Links
+
+Link for our project demo: https://www.youtube.com/watch?v=r954naOYDRQ
